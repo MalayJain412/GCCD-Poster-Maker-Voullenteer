@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Your GCCD 2025 Poster</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="poster-result.css" />
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="logo-section">
+        <div class="logo">GDG</div>
+        <div>
+          <div class="title">Your GCCD 2025 Poster</div>
+          <div class="subtitle">Ready to download and share!</div>
+        </div>
+      </div>
+      <div class="actions-header">
+        <button class="back-button" id="retake">
+          <span>←</span>
+          <span>Retake Photo</span>
+        </button>
+      </div>
+    </header>
+
+    <main>
+      <div class="poster-display">
+        <div class="poster-container">
+          <canvas id="final-poster"></canvas>
+        </div>
+        <div class="poster-info">
+          <div class="success-message">
+            <div class="success-icon">🎉</div>
+            <h2>Poster Created Successfully!</h2>
+            <p>Your personalized GCCD 2025 poster is ready. Download it or share it with your friends!</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="actions-panel">
+        <div class="action-section">
+          <h3>⬇️ Download Options</h3>
+          <div class="download-buttons">
+            <button class="primary-button" id="download-hd">
+              <span class="button-icon">📥</span>
+              <div>
+                <div class="button-title">Download HD Poster</div>
+                <div class="button-subtitle">High quality PNG format</div>
+              </div>
+            </button>
+            <button class="secondary-button" id="download-web">
+              <span class="button-icon">🌐</span>
+              <div>
+                <div class="button-title">Download for Web</div>
+                <div class="button-subtitle">Optimized for social media</div>
+              </div>
+            </button>
+          </div>
+        </div>
+
+        <div class="action-section">
+          <h3>📱 Share Your Poster</h3>
+          <div class="share-buttons">
+            <button class="share-button" id="share-native">
+              <span class="share-icon">📤</span>
+              <span>Share</span>
+            </button>
+            <button class="share-button" id="copy-link">
+              <span class="share-icon">🔗</span>
+              <span>Copy Link</span>
+            </button>
+            <button class="share-button" id="copy-image">
+              <span class="share-icon">📋</span>
+              <span>Copy Image</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="action-section">
+          <h3>🎯 Quick Actions</h3>
+          <div class="quick-actions">
+            <button class="action-btn" id="create-another">
+              <span>🔄</span>
+              <span>Create Another</span>
+            </button>
+            <button class="action-btn" id="view-fullscreen">
+              <span>🔍</span>
+              <span>View Fullscreen</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <div class="notification" id="notification"></div>
+  
+  <!-- Fullscreen Modal -->
+  <div class="fullscreen-modal" id="fullscreen-modal">
+    <div class="modal-content">
+      <button class="close-modal" id="close-modal">×</button>
+      <canvas id="fullscreen-canvas"></canvas>
+    </div>
+  </div>
+
+  <script src="poster-result.js"></script>
+</body>
+</html>

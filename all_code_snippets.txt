@@ -1,0 +1,1619 @@
+
+
+----- File: D:\ML Folders\ml_env\GitHub\GCCD-Poster-Maker\all_code_snippets.txt -----
+
+
+----- File: D:\ML Folders\ml_env\GitHub\GCCD-Poster-Maker\copy_utils.py -----
+import os
+
+# Root directory to start searching from
+ROOT_DIR = r"D:\ML Folders\ml_env\GitHub\GCCD-Poster-Maker"
+# File extensions to include
+INCLUDE_EXTENSIONS = {'.py', '.js', '.css', '.html', '.txt','.json'}
+
+# Output file where combined code will be saved
+OUTPUT_FILE = os.path.join(ROOT_DIR, "all_code_snippets.txt")
+
+def should_include(file_name):
+    return os.path.splitext(file_name)[1] in INCLUDE_EXTENSIONS
+
+def copy_code_snippets():
+    with open(OUTPUT_FILE, 'w', encoding='utf-8') as outfile:
+        for dirpath, _, filenames in os.walk(ROOT_DIR):
+            for filename in filenames:
+                if should_include(filename):
+                    file_path = os.path.join(dirpath, filename)
+                    try:
+                        with open(file_path, 'r', encoding='utf-8') as f:
+                            content = f.read()
+                            outfile.write(f"\n\n----- File: {file_path} -----\n")
+                            outfile.write(content)
+                    except Exception as e:
+                        print(f"Could not read {file_path}: {e}")
+
+    print(f"\n✅ Code snippets copied to: {OUTPUT_FILE}")
+
+if __name__ == "__main__":
+    copy_code_snippets()
+
+
+----- File: D:\ML Folders\ml_env\GitHub\GCCD-Poster-Maker\index.html -----
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>GCCD 2025 Poster Creator</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="logo-section">
+        <div class="logo">GDG</div>
+        <div>
+          <div class="title">GCCD 2025 Poster Creator</div>
+          <div class="subtitle">Create your personalized Cloud Community Day poster</div>
+        </div>
+      </div>
+      <div class="status-indicator">
+        <div class="status-dot"></div>
+        <span id="status-text">Camera Ready</span>
+      </div>
+    </header>
+
+    <main>
+      <div class="poster-workspace">
+        <div class="poster-container">
+          <img src="assets/poster.jpg" alt="Poster Background" id="poster-bg" />
+          <video id="camera" autoplay playsinline muted></video>
+        </div>
+        <div class="loading" id="loading">
+          <div class="spinner"></div>
+        </div>
+      </div>
+
+      <div class="controls-panel">
+        <div class="control-section">
+          <h3>📸 Camera</h3>
+          <div class="camera-controls">
+            <button class="camera-btn" id="switch-camera">🔄 Flip</button>
+            <button class="camera-btn" id="take-photo">📷 Preview</button>
+          </div>
+          <button class="primary-button" id="capture">Capture & Create Poster</button>
+        </div>
+
+        <div class="control-section">
+          <h3>💬 Message Templates</h3>
+          <div class="chips-container">
+            <button class="chip" data-text="I'm attending Cloud Community Day 2025 ☁️">I'm attending CCD 2025 ☁️</button>
+            <button class="chip" data-text="Meet me at CCD Bhopal 2025 🚀">Meet me at CCD Bhopal 🚀</button>
+            <button class="chip" data-text="Let's innovate @ CCD 2025 🧠">Let's innovate @ CCD 2025 🧠</button>
+            <button class="chip" data-text="Cloud Community Day vibes! ✨">CCD vibes! ✨</button>
+          </div>
+        </div>
+
+        <div class="control-section">
+          <h3>✏️ Custom Message</h3>
+          <input type="text" id="custom-text" placeholder="Add your custom caption..." maxlength="50" />
+          <div style="font-size: 12px; color: #666; margin-top: 5px;">
+            <span id="char-count">0</span>/50 characters
+          </div>
+        </div>
+
+        <div class="control-section preview-section">
+          <h3>⬇️ Download</h3>
+          <div class="download-area">
+            <p style="color: #666; font-size: 14px; text-align: center;">Capture your poster to enable download options</p>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <div class="notification" id="notification"></div>
+
+  <script src="script.js"></script>
+</body>
+</html>
+
+----- File: D:\ML Folders\ml_env\GitHub\GCCD-Poster-Maker\poster-result.css -----
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Inter', 'Poppins', 'Segoe UI', sans-serif;
+  background: #ffffff;
+  min-height: 100vh;
+  color: #333;
+}
+
+.container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #f8f9fa;
+  border: 1px solid #e9ecef;
+  border-radius: 20px;
+  padding: 15px 25px;
+  margin-bottom: 30px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.logo-section {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.logo {
+  width: 50px;
+  height: 50px;
+  background: linear-gradient(45deg, #4285F4, #34A853, #FBBC05, #EA4335);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  color: white;
+  font-size: 18px;
+}
+
+.title {
+  color: #333;
+  font-size: 24px;
+  font-weight: 700;
+  font-family: 'Poppins', sans-serif;
+}
+
+.subtitle {
+  color: #666;
+  font-size: 14px;
+  font-family: 'Inter', sans-serif;
+}
+
+.actions-header {
+  display: flex;
+  gap: 15px;
+}
+
+.back-button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #4285F4;
+  border: 1px solid #3367D6;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 12px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.back-button:hover {
+  background: #3367D6;
+  transform: translateY(-2px);
+}
+
+main {
+  display: grid;
+  grid-template-columns: 1fr 400px;
+  gap: 30px;
+  align-items: start;
+}
+
+.poster-display {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border-radius: 20px;
+  padding: 30px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.poster-container {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+#final-poster {
+  max-width: 100%;
+  height: auto;
+  border-radius: 15px;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+  transition: transform 0.3s ease;
+}
+
+#final-poster:hover {
+  transform: scale(1.02);
+}
+
+.poster-info {
+  text-align: center;
+}
+
+.success-message {
+  padding: 20px;
+}
+
+.success-icon {
+  font-size: 48px;
+  margin-bottom: 15px;
+}
+
+.success-message h2 {
+  color: #333;
+  margin-bottom: 10px;
+  font-size: 24px;
+  font-weight: 600;
+}
+
+.success-message p {
+  color: #666;
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+.actions-panel {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border-radius: 20px;
+  padding: 30px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  height: fit-content;
+}
+
+.action-section {
+  margin-bottom: 30px;
+}
+
+.action-section:last-child {
+  margin-bottom: 0;
+}
+
+.action-section h3 {
+  margin-bottom: 15px;
+  color: #333;
+  font-size: 18px;
+  font-weight: 600;
+  font-family: 'Poppins', sans-serif;
+}
+
+.download-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.primary-button {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  width: 100%;
+  padding: 15px 20px;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  color: white;
+  background: linear-gradient(135deg, #4285F4, #3367D6);
+  transition: all 0.3s ease;
+  text-align: left;
+}
+
+.primary-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px rgba(66, 133, 244, 0.3);
+}
+
+.secondary-button {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  width: 100%;
+  padding: 12px 20px;
+  border: 2px solid #4285F4;
+  border-radius: 10px;
+  cursor: pointer;
+  color: #4285F4;
+  background: transparent;
+  transition: all 0.3s ease;
+  text-align: left;
+}
+
+.secondary-button:hover {
+  background: #4285F4;
+  color: white;
+  transform: translateY(-1px);
+}
+
+.button-icon {
+  font-size: 20px;
+  flex-shrink: 0;
+}
+
+.button-title {
+  font-weight: 600;
+  font-size: 14px;
+  margin-bottom: 2px;
+}
+
+.button-subtitle {
+  font-size: 12px;
+  opacity: 0.8;
+}
+
+.share-buttons {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+
+.share-button {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 15px 10px;
+  border: 2px solid #e0e0e0;
+  border-radius: 12px;
+  background: transparent;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 12px;
+  font-weight: 500;
+  color: #666;
+}
+
+.share-button:hover {
+  border-color: #4285F4;
+  color: #4285F4;
+  transform: translateY(-2px);
+}
+
+.share-icon {
+  font-size: 18px;
+}
+
+.quick-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.action-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 15px 10px;
+  border: none;
+  border-radius: 10px;
+  background: #f5f5f5;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 12px;
+  font-weight: 500;
+  color: #333;
+}
+
+.action-btn:hover {
+  background: #e0e0e0;
+  transform: translateY(-1px);
+}
+
+.action-btn span:first-child {
+  font-size: 18px;
+}
+
+/* Fullscreen Modal */
+.fullscreen-modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.9);
+  z-index: 1000;
+  backdrop-filter: blur(5px);
+}
+
+.fullscreen-modal.active {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-content {
+  position: relative;
+  max-width: 90%;
+  max-height: 90%;
+}
+
+.close-modal {
+  position: absolute;
+  top: -40px;
+  right: 0;
+  background: rgba(255, 255, 255, 0.2);
+  border: none;
+  color: white;
+  font-size: 24px;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.close-modal:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+#fullscreen-canvas {
+  max-width: 100%;
+  max-height: 100%;
+  border-radius: 10px;
+}
+
+.notification {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  padding: 15px 20px;
+  border-radius: 10px;
+  color: white;
+  font-weight: 500;
+  z-index: 1001;
+  transform: translateX(400px);
+  transition: transform 0.3s ease;
+}
+
+.notification.show {
+  transform: translateX(0);
+}
+
+.notification.success {
+  background: linear-gradient(135deg, #34A853, #2D8A47);
+}
+
+.notification.error {
+  background: linear-gradient(135deg, #EA4335, #D33B2C);
+}
+
+@media (max-width: 768px) {
+  main {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+  
+  .container {
+    padding: 15px;
+  }
+  
+  header {
+    flex-direction: column;
+    gap: 15px;
+    text-align: center;
+  }
+  
+  .share-buttons {
+    grid-template-columns: 1fr;
+  }
+  
+  .quick-actions {
+    grid-template-columns: 1fr;
+  }
+}
+
+----- File: D:\ML Folders\ml_env\GitHub\GCCD-Poster-Maker\poster-result.html -----
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Your GCCD 2025 Poster</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="poster-result.css" />
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="logo-section">
+        <div class="logo">GDG</div>
+        <div>
+          <div class="title">Your GCCD 2025 Poster</div>
+          <div class="subtitle">Ready to download and share!</div>
+        </div>
+      </div>
+      <div class="actions-header">
+        <button class="back-button" id="retake">
+          <span>←</span>
+          <span>Retake Photo</span>
+        </button>
+      </div>
+    </header>
+
+    <main>
+      <div class="poster-display">
+        <div class="poster-container">
+          <canvas id="final-poster"></canvas>
+        </div>
+        <div class="poster-info">
+          <div class="success-message">
+            <div class="success-icon">🎉</div>
+            <h2>Poster Created Successfully!</h2>
+            <p>Your personalized GCCD 2025 poster is ready. Download it or share it with your friends!</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="actions-panel">
+        <div class="action-section">
+          <h3>⬇️ Download Options</h3>
+          <div class="download-buttons">
+            <button class="primary-button" id="download-hd">
+              <span class="button-icon">📥</span>
+              <div>
+                <div class="button-title">Download HD Poster</div>
+                <div class="button-subtitle">High quality PNG format</div>
+              </div>
+            </button>
+            <button class="secondary-button" id="download-web">
+              <span class="button-icon">🌐</span>
+              <div>
+                <div class="button-title">Download for Web</div>
+                <div class="button-subtitle">Optimized for social media</div>
+              </div>
+            </button>
+          </div>
+        </div>
+
+        <div class="action-section">
+          <h3>📱 Share Your Poster</h3>
+          <div class="share-buttons">
+            <button class="share-button" id="share-native">
+              <span class="share-icon">📤</span>
+              <span>Share</span>
+            </button>
+            <button class="share-button" id="copy-link">
+              <span class="share-icon">🔗</span>
+              <span>Copy Link</span>
+            </button>
+            <button class="share-button" id="copy-image">
+              <span class="share-icon">📋</span>
+              <span>Copy Image</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="action-section">
+          <h3>🎯 Quick Actions</h3>
+          <div class="quick-actions">
+            <button class="action-btn" id="create-another">
+              <span>🔄</span>
+              <span>Create Another</span>
+            </button>
+            <button class="action-btn" id="view-fullscreen">
+              <span>🔍</span>
+              <span>View Fullscreen</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <div class="notification" id="notification"></div>
+  
+  <!-- Fullscreen Modal -->
+  <div class="fullscreen-modal" id="fullscreen-modal">
+    <div class="modal-content">
+      <button class="close-modal" id="close-modal">×</button>
+      <canvas id="fullscreen-canvas"></canvas>
+    </div>
+  </div>
+
+  <script src="poster-result.js"></script>
+</body>
+</html>
+
+----- File: D:\ML Folders\ml_env\GitHub\GCCD-Poster-Maker\poster-result.js -----
+class PosterResult {
+  constructor() {
+    this.canvas = document.getElementById('final-poster');
+    this.ctx = this.canvas.getContext('2d');
+    this.fullscreenCanvas = document.getElementById('fullscreen-canvas');
+    this.fullscreenCtx = this.fullscreenCanvas.getContext('2d');
+    this.fullscreenModal = document.getElementById('fullscreen-modal');
+    
+    // Buttons
+    this.retakeBtn = document.getElementById('retake');
+    this.downloadHdBtn = document.getElementById('download-hd');
+    this.downloadWebBtn = document.getElementById('download-web');
+    this.shareNativeBtn = document.getElementById('share-native');
+    this.copyLinkBtn = document.getElementById('copy-link');
+    this.copyImageBtn = document.getElementById('copy-image');
+    this.createAnotherBtn = document.getElementById('create-another');
+    this.viewFullscreenBtn = document.getElementById('view-fullscreen');
+    this.closeModalBtn = document.getElementById('close-modal');
+    
+    this.init();
+  }
+
+  init() {
+    this.loadPosterFromStorage();
+    this.bindEvents();
+  }
+
+  loadPosterFromStorage() {
+    try {
+      const posterData = localStorage.getItem('gccd_poster_data');
+      if (posterData) {
+        const img = new Image();
+        img.onload = () => {
+          this.canvas.width = img.width;
+          this.canvas.height = img.height;
+          this.ctx.drawImage(img, 0, 0);
+          
+          // Also prepare fullscreen canvas
+          this.fullscreenCanvas.width = img.width;
+          this.fullscreenCanvas.height = img.height;
+          this.fullscreenCtx.drawImage(img, 0, 0);
+        };
+        img.src = posterData;
+      } else {
+        // No poster data found, redirect back to main page
+        this.showNotification('No poster data found. Redirecting...', 'error');
+        setTimeout(() => {
+          window.location.href = 'index.html';
+        }, 2000);
+      }
+    } catch (error) {
+      console.error('Error loading poster:', error);
+      this.showNotification('Error loading poster. Please try again.', 'error');
+    }
+  }
+
+  bindEvents() {
+    // Retake/Back button
+    this.retakeBtn.addEventListener('click', () => {
+      this.goBack();
+    });
+
+    // Download buttons
+    this.downloadHdBtn.addEventListener('click', () => {
+      this.downloadPoster('hd');
+    });
+
+    this.downloadWebBtn.addEventListener('click', () => {
+      this.downloadPoster('web');
+    });
+
+    // Share buttons
+    this.shareNativeBtn.addEventListener('click', () => {
+      this.sharePoster();
+    });
+
+    this.copyLinkBtn.addEventListener('click', () => {
+      this.copyLink();
+    });
+
+    this.copyImageBtn.addEventListener('click', () => {
+      this.copyImage();
+    });
+
+    // Quick actions
+    this.createAnotherBtn.addEventListener('click', () => {
+      this.createAnother();
+    });
+
+    this.viewFullscreenBtn.addEventListener('click', () => {
+      this.viewFullscreen();
+    });
+
+    // Modal controls
+    this.closeModalBtn.addEventListener('click', () => {
+      this.closeFullscreen();
+    });
+
+    this.fullscreenModal.addEventListener('click', (e) => {
+      if (e.target === this.fullscreenModal) {
+        this.closeFullscreen();
+      }
+    });
+
+    // Keyboard shortcuts
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        this.closeFullscreen();
+      } else if (e.key === 'f' || e.key === 'F') {
+        this.viewFullscreen();
+      } else if (e.key === 's' || e.key === 'S') {
+        e.preventDefault();
+        this.downloadPoster('hd');
+      }
+    });
+  }
+
+  goBack() {
+    // Clear the poster data and go back to main page
+    localStorage.removeItem('gccd_poster_data');
+    window.location.href = 'index.html';
+  }
+
+  downloadPoster(quality = 'hd') {
+    try {
+      const link = document.createElement('a');
+      const timestamp = new Date().toISOString().slice(0, 19).replace(/[:\-]/g, '');
+      
+      let dataUrl, filename;
+      
+      if (quality === 'hd') {
+        // High quality PNG - but check canvas size first
+        const canvasArea = this.canvas.width * this.canvas.height;
+        if (canvasArea > 2000000) { // If canvas is very large (> 2MP)
+          // Use high quality JPEG instead of PNG for large images
+          dataUrl = this.canvas.toDataURL('image/jpeg', 0.95);
+          filename = `gccd-2025-poster-hd-${timestamp}.jpg`;
+        } else {
+          dataUrl = this.canvas.toDataURL('image/png', 1.0);
+          filename = `gccd-2025-poster-hd-${timestamp}.png`;
+        }
+      } else {
+        // Web optimized JPEG
+        dataUrl = this.canvas.toDataURL('image/jpeg', 0.85);
+        filename = `gccd-2025-poster-web-${timestamp}.jpg`;
+      }
+      
+      link.download = filename;
+      link.href = dataUrl;
+      link.click();
+      
+      this.showNotification(`${quality.toUpperCase()} poster downloaded successfully!`, 'success');
+    } catch (error) {
+      console.error('Download error:', error);
+      this.showNotification('Failed to download poster.', 'error');
+    }
+  }
+
+  async sharePoster() {
+    try {
+      if (navigator.share && navigator.canShare) {
+        this.canvas.toBlob(async (blob) => {
+          const file = new File([blob], 'gccd-2025-poster.png', { type: 'image/png' });
+          
+          if (navigator.canShare({ files: [file] })) {
+            await navigator.share({
+              title: 'GCCD 2025 Poster',
+              text: 'Check out my Cloud Community Day 2025 poster! 🚀',
+              files: [file]
+            });
+            this.showNotification('Poster shared successfully!', 'success');
+          } else {
+            this.fallbackShare();
+          }
+        });
+      } else {
+        this.fallbackShare();
+      }
+    } catch (error) {
+      console.error('Share error:', error);
+      this.fallbackShare();
+    }
+  }
+
+  fallbackShare() {
+    // Copy image to clipboard as fallback
+    this.copyImage();
+  }
+
+  async copyLink() {
+    try {
+      const url = window.location.href;
+      await navigator.clipboard.writeText(url);
+      this.showNotification('Link copied to clipboard!', 'success');
+    } catch (error) {
+      console.error('Copy link error:', error);
+      this.showNotification('Failed to copy link.', 'error');
+    }
+  }
+
+  async copyImage() {
+    try {
+      this.canvas.toBlob(async (blob) => {
+        const item = new ClipboardItem({ 'image/png': blob });
+        await navigator.clipboard.write([item]);
+        this.showNotification('Image copied to clipboard!', 'success');
+      });
+    } catch (error) {
+      console.error('Copy image error:', error);
+      this.showNotification('Failed to copy image. Try downloading instead.', 'error');
+    }
+  }
+
+  createAnother() {
+    // Clear current poster and go back to main page
+    localStorage.removeItem('gccd_poster_data');
+    window.location.href = 'index.html';
+  }
+
+  viewFullscreen() {
+    this.fullscreenModal.classList.add('active');
+    document.body.style.overflow = 'hidden';
+  }
+
+  closeFullscreen() {
+    this.fullscreenModal.classList.remove('active');
+    document.body.style.overflow = '';
+  }
+
+  showNotification(message, type = 'success') {
+    const notification = document.getElementById('notification');
+    notification.textContent = message;
+    notification.className = `notification ${type}`;
+    notification.classList.add('show');
+    
+    setTimeout(() => {
+      notification.classList.remove('show');
+    }, 3000);
+  }
+}
+
+// Initialize when DOM is loaded
+document.addEventListener('DOMContentLoaded', () => {
+  new PosterResult();
+});
+
+// Handle page unload - clean up resources
+window.addEventListener('beforeunload', () => {
+  // Clean up any resources if needed
+});
+
+----- File: D:\ML Folders\ml_env\GitHub\GCCD-Poster-Maker\script.js -----
+class PosterCreator {
+  constructor() {
+    this.video = document.getElementById('camera');
+    this.posterImg = document.getElementById('poster-bg');
+    this.captureBtn = document.getElementById('capture');
+    this.customText = document.getElementById('custom-text');
+    this.chips = document.querySelectorAll('.chip');
+    this.switchCameraBtn = document.getElementById('switch-camera');
+    this.takePhotoBtn = document.getElementById('take-photo');
+    this.loading = document.getElementById('loading');
+    this.statusText = document.getElementById('status-text');
+    this.charCount = document.getElementById('char-count');
+    
+    this.currentStream = null;
+    this.facingMode = 'user';
+    
+    // Create a hidden canvas for processing
+    this.canvas = document.createElement('canvas');
+    this.ctx = this.canvas.getContext('2d');
+    
+    this.init();
+  }
+
+  async init() {
+    await this.startCamera();
+    this.bindEvents();
+    this.setupCanvas();
+  }
+
+  async startCamera() {
+    try {
+      if (this.currentStream) {
+        this.currentStream.getTracks().forEach(track => track.stop());
+      }
+
+      const stream = await navigator.mediaDevices.getUserMedia({
+        video: { 
+          facingMode: this.facingMode,
+          width: { ideal: 1280 },
+          height: { ideal: 720 }
+        }
+      });
+      
+      this.video.srcObject = stream;
+      this.currentStream = stream;
+      this.statusText.textContent = 'Camera Ready';
+      this.showNotification('Camera initialized successfully!', 'success');
+    } catch (err) {
+      console.error('Camera error:', err);
+      this.statusText.textContent = 'Camera Error';
+      this.showNotification('Camera access denied. Please enable camera permissions.', 'error');
+    }
+  }
+
+  bindEvents() {
+    // Chip selection
+    this.chips.forEach(chip => {
+      chip.addEventListener('click', () => {
+        this.chips.forEach(c => c.classList.remove('selected'));
+        chip.classList.add('selected');
+        this.customText.value = chip.dataset.text;
+        this.updateCharCount();
+      });
+    });
+
+    // Character counter
+    this.customText.addEventListener('input', () => {
+      this.updateCharCount();
+    });
+
+    // Camera controls
+    this.switchCameraBtn.addEventListener('click', () => {
+      this.switchCamera();
+    });
+
+    this.takePhotoBtn.addEventListener('click', () => {
+      this.previewPhoto();
+    });
+
+    // Main capture
+    this.captureBtn.addEventListener('click', () => {
+      this.captureAndCreate();
+    });
+
+    // Setup canvas when poster loads
+    this.posterImg.onload = () => {
+      console.log('Poster image loaded successfully');
+      this.setupCanvas();
+    };
+    
+    this.posterImg.onerror = () => {
+      console.error('Failed to load poster image');
+      this.showNotification('Failed to load poster image. Please refresh the page.', 'error');
+    };
+    
+    // If image is already loaded
+    if (this.posterImg.complete) {
+      this.setupCanvas();
+    }
+  }
+
+  updateCharCount() {
+    const count = this.customText.value.length;
+    this.charCount.textContent = count;
+    this.charCount.style.color = count > 45 ? '#EA4335' : '#666';
+  }
+
+  setupCanvas() {
+    if (this.posterImg.complete && this.posterImg.naturalWidth > 0) {
+      this.canvas.width = this.posterImg.naturalWidth;
+      this.canvas.height = this.posterImg.naturalHeight;
+      console.log('Canvas setup complete:', this.canvas.width, 'x', this.canvas.height);
+    } else {
+      console.log('Poster image not ready yet');
+      // Retry after a short delay
+      setTimeout(() => this.setupCanvas(), 100);
+    }
+  }
+
+  async switchCamera() {
+    this.facingMode = this.facingMode === 'user' ? 'environment' : 'user';
+    await this.startCamera();
+    this.showNotification('Camera switched!', 'success');
+  }
+
+  previewPhoto() {
+    // Add a flash effect
+    const flash = document.createElement('div');
+    flash.style.cssText = `
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: white;
+      z-index: 9999;
+      pointer-events: none;
+      opacity: 0.8;
+    `;
+    document.body.appendChild(flash);
+    
+    setTimeout(() => {
+      document.body.removeChild(flash);
+    }, 150);
+    
+    this.showNotification('Photo preview captured!', 'success');
+  }
+
+  async captureAndCreate() {
+    // Check if poster image is loaded
+    if (!this.posterImg.complete || this.posterImg.naturalWidth === 0) {
+      this.showNotification('Poster image not loaded yet. Please wait...', 'error');
+      return;
+    }
+
+    // Check if video is ready
+    if (!this.video.srcObject || this.video.videoWidth === 0) {
+      this.showNotification('Camera not ready. Please allow camera access.', 'error');
+      return;
+    }
+
+    this.loading.style.display = 'flex';
+    this.captureBtn.disabled = true;
+    this.captureBtn.textContent = 'Creating Poster...';
+    
+    // Simulate processing time for better UX
+    await new Promise(resolve => setTimeout(resolve, 1500));
+
+    try {
+      // Get poster dimensions
+      const posterWidth = this.posterImg.naturalWidth || this.posterImg.width || 600;
+      const posterHeight = this.posterImg.naturalHeight || this.posterImg.height || 800;
+      
+      console.log('Poster dimensions:', posterWidth, 'x', posterHeight);
+      console.log('Video dimensions:', this.video.videoWidth, 'x', this.video.videoHeight);
+      
+      // For very large posters, work with a smaller canvas initially
+      const maxWorkingSize = 2400; // Max width/height for working canvas
+      const scale = Math.min(1, maxWorkingSize / Math.max(posterWidth, posterHeight));
+      const workingWidth = posterWidth * scale;
+      const workingHeight = posterHeight * scale;
+      
+      console.log('Working dimensions:', workingWidth, 'x', workingHeight, 'Scale:', scale);
+      
+      // Set canvas size to working dimensions
+      this.canvas.width = workingWidth;
+      this.canvas.height = workingHeight;
+
+      // Clear canvas
+      this.ctx.clearRect(0, 0, workingWidth, workingHeight);
+
+      // Draw poster background (scaled)
+      this.ctx.drawImage(this.posterImg, 0, 0, workingWidth, workingHeight);
+
+      // Calculate selfie position based on working dimensions to match the black circle
+      const x = workingWidth * 0.5; // Center horizontally (black circle is centered)
+      const y = workingHeight * 0.35; // Moved down 10% more to center on the black circle in final poster
+      const radius = Math.min(workingWidth, workingHeight) * 0.09; // Size to match the black circle
+
+      console.log('Selfie position:', x, y, 'radius:', radius);
+
+      // Draw circular selfie
+      this.ctx.save();
+      this.ctx.beginPath();
+      this.ctx.arc(x, y, radius, 0, Math.PI * 2, true);
+      this.ctx.closePath();
+      this.ctx.clip();
+
+      // Get video dimensions and calculate crop
+      const videoWidth = this.video.videoWidth;
+      const videoHeight = this.video.videoHeight;
+      
+      if (videoWidth === 0 || videoHeight === 0) {
+        throw new Error('Video dimensions are invalid');
+      }
+
+      const side = Math.min(videoWidth, videoHeight);
+      const sx = (videoWidth - side) / 2;
+      const sy = (videoHeight - side) / 2;
+
+      // Draw video frame
+      this.ctx.drawImage(
+        this.video,
+        sx, sy, side, side,
+        x - radius, y - radius,
+        radius * 2, radius * 2
+      );
+
+      this.ctx.restore();
+
+      // Add custom text with better styling (positioned at bottom)
+      const text = this.customText.value.trim();
+      if (text) {
+        this.ctx.font = `bold ${workingHeight * 0.025}px 'Poppins', 'Inter', sans-serif`;
+        this.ctx.fillStyle = '#ffffff';
+        this.ctx.strokeStyle = '#000000';
+        this.ctx.lineWidth = Math.max(2, workingHeight * 0.003); // Scale line width
+        this.ctx.textAlign = 'center';
+        
+        // Position text at the bottom of the poster
+        const textY = workingHeight - (workingHeight * 0.06);
+        this.ctx.strokeText(text, workingWidth / 2, textY);
+        this.ctx.fillText(text, workingWidth / 2, textY);
+      }
+
+      // Generate and save poster data with compression
+      // First try with lower quality to reduce size
+      let posterDataUrl = this.canvas.toDataURL('image/jpeg', 0.8); // 80% quality JPEG
+      
+      // Check if the data URL is too large for localStorage
+      const maxSize = 4 * 1024 * 1024; // 4MB limit (localStorage is usually 5-10MB)
+      
+      if (posterDataUrl.length > maxSize) {
+        console.log('Image too large, compressing further...');
+        posterDataUrl = this.canvas.toDataURL('image/jpeg', 0.6); // 60% quality
+        
+        if (posterDataUrl.length > maxSize) {
+          console.log('Still too large, creating smaller version...');
+          // Create a smaller canvas for storage
+          const storageCanvas = document.createElement('canvas');
+          const storageCtx = storageCanvas.getContext('2d');
+          
+          // Scale down to max 1200px width while maintaining aspect ratio
+          const maxWidth = 1200;
+          const scale = Math.min(1, maxWidth / posterWidth);
+          const scaledWidth = posterWidth * scale;
+          const scaledHeight = posterHeight * scale;
+          
+          storageCanvas.width = scaledWidth;
+          storageCanvas.height = scaledHeight;
+          
+          // Draw the full-size canvas to the smaller canvas
+          storageCtx.drawImage(this.canvas, 0, 0, scaledWidth, scaledHeight);
+          posterDataUrl = storageCanvas.toDataURL('image/jpeg', 0.8);
+          
+          console.log('Compressed to:', scaledWidth, 'x', scaledHeight);
+        }
+      }
+      
+      if (!posterDataUrl || posterDataUrl === 'data:,') {
+        throw new Error('Failed to generate poster image data');
+      }
+
+      console.log('Final data URL size:', (posterDataUrl.length / 1024 / 1024).toFixed(2), 'MB');
+      localStorage.setItem('gccd_poster_data', posterDataUrl);
+      
+      this.showNotification('Poster created! Redirecting...', 'success');
+      
+      // Redirect to poster result page
+      setTimeout(() => {
+        window.location.href = 'poster-result.html';
+      }, 1000);
+      
+    } catch (error) {
+      console.error('Capture error details:', error);
+      
+      // More specific error messages
+      let errorMessage = 'Failed to create poster. ';
+      if (error.message.includes('Video dimensions')) {
+        errorMessage += 'Camera not ready. Please try again.';
+      } else if (error.message.includes('poster image data')) {
+        errorMessage += 'Image generation failed. Please try again.';
+      } else {
+        errorMessage += 'Please check your camera permissions and try again.';
+      }
+      
+      this.showNotification(errorMessage, 'error');
+      this.captureBtn.disabled = false;
+      this.captureBtn.textContent = 'Capture & Create Poster';
+    } finally {
+      this.loading.style.display = 'none';
+    }
+  }
+
+  showNotification(message, type = 'success') {
+    const notification = document.getElementById('notification');
+    notification.textContent = message;
+    notification.className = `notification ${type}`;
+    notification.classList.add('show');
+    
+    setTimeout(() => {
+      notification.classList.remove('show');
+    }, 3000);
+  }
+}
+
+// Initialize the app when DOM is loaded
+document.addEventListener('DOMContentLoaded', () => {
+  new PosterCreator();
+});
+
+// Handle page visibility changes to optimize performance
+document.addEventListener('visibilitychange', () => {
+  if (document.hidden) {
+    // Pause video when tab is not visible to save resources
+    const video = document.getElementById('camera');
+    if (video && video.srcObject) {
+      video.srcObject.getVideoTracks().forEach(track => {
+        track.enabled = false;
+      });
+    }
+  } else {
+    // Resume video when tab becomes visible
+    const video = document.getElementById('camera');
+    if (video && video.srcObject) {
+      video.srcObject.getVideoTracks().forEach(track => {
+        track.enabled = true;
+      });
+    }
+  }
+});
+
+// Handle page unload - clean up camera resources
+window.addEventListener('beforeunload', () => {
+  const video = document.getElementById('camera');
+  if (video && video.srcObject) {
+    video.srcObject.getTracks().forEach(track => track.stop());
+  }
+});
+
+----- File: D:\ML Folders\ml_env\GitHub\GCCD-Poster-Maker\style.css -----
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Inter', 'Poppins', 'Segoe UI', sans-serif;
+  background: #ffffff;
+  min-height: 100vh;
+  color: #333;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #f8f9fa;
+  border: 1px solid #e9ecef;
+  border-radius: 20px;
+  padding: 15px 25px;
+  margin-bottom: 30px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.logo-section {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.logo {
+  width: 50px;
+  height: 50px;
+  background: linear-gradient(45deg, #4285F4, #34A853, #FBBC05, #EA4335);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  color: white;
+  font-size: 18px;
+}
+
+.title {
+  color: #333;
+  font-size: 24px;
+  font-weight: 700;
+  font-family: 'Poppins', sans-serif;
+}
+
+.subtitle {
+  color: #666;
+  font-size: 14px;
+  font-family: 'Inter', sans-serif;
+}
+
+.status-indicator {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(52, 168, 83, 0.1);
+  padding: 8px 15px;
+  border-radius: 20px;
+  color: #34A853;
+  font-size: 14px;
+  font-weight: 500;
+  border: 1px solid rgba(52, 168, 83, 0.2);
+}
+
+.status-dot {
+  width: 8px;
+  height: 8px;
+  background: #34A853;
+  border-radius: 50%;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+main {
+  display: grid;
+  grid-template-columns: 1fr 400px;
+  gap: 30px;
+  align-items: start;
+}
+
+.poster-workspace {
+  background: #ffffff;
+  border: 1px solid #e9ecef;
+  border-radius: 20px;
+  padding: 30px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+.poster-container {
+  position: relative;
+  display: inline-block;
+  border-radius: 15px;
+  overflow: hidden;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+}
+
+#poster-bg {
+  width: 100%;
+  max-width: 600px;
+  height: auto;
+  display: block;
+}
+
+#camera {
+  position: absolute;
+  top: 23%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 140px;
+  height: 140px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 4px solid rgba(255, 255, 255, 0.9);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+  z-index: 5;
+  transition: all 0.3s ease;
+}
+
+#camera:hover {
+  transform: scale(1.05);
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+}
+
+#camera.hidden {
+  display: none;
+}
+
+.controls-panel {
+  background: #ffffff;
+  border: 1px solid #e9ecef;
+  border-radius: 20px;
+  padding: 30px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  height: fit-content;
+}
+
+.control-section {
+  margin-bottom: 25px;
+}
+
+.control-section h3 {
+  margin-bottom: 15px;
+  color: #333;
+  font-size: 18px;
+  font-weight: 600;
+  font-family: 'Poppins', sans-serif;
+}
+
+.primary-button {
+  width: 100%;
+  padding: 15px;
+  font-size: 16px;
+  font-weight: 600;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  color: white;
+  background: linear-gradient(135deg, #4285F4, #3367D6);
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+  margin-bottom: 10px;
+}
+
+.primary-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px rgba(66, 133, 244, 0.3);
+}
+
+.primary-button:active {
+  transform: translateY(0);
+}
+
+.secondary-button {
+  width: 100%;
+  padding: 12px;
+  font-size: 14px;
+  font-weight: 500;
+  border: 2px solid #4285F4;
+  border-radius: 10px;
+  cursor: pointer;
+  color: #4285F4;
+  background: transparent;
+  transition: all 0.3s ease;
+  margin-bottom: 8px;
+}
+
+.secondary-button:hover {
+  background: #4285F4;
+  color: white;
+  transform: translateY(-1px);
+}
+
+.secondary-button.disabled {
+  border-color: #ccc;
+  color: #999;
+  cursor: not-allowed;
+  background: #f5f5f5;
+}
+
+.secondary-button.disabled:hover {
+  transform: none;
+  background: #f5f5f5;
+  color: #999;
+}
+
+.chips-container {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.chip {
+  background: linear-gradient(135deg, #FBBC05, #F9AB00);
+  padding: 12px 16px;
+  border-radius: 25px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-align: center;
+  color: #333;
+  border: none;
+}
+
+.chip:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(251, 188, 5, 0.3);
+}
+
+.chip.selected {
+  background: linear-gradient(135deg, #34A853, #2D8A47);
+  color: white;
+}
+
+#custom-text {
+  width: 100%;
+  padding: 15px;
+  border-radius: 10px;
+  border: 2px solid #e0e0e0;
+  font-size: 14px;
+  transition: all 0.3s ease;
+  background: #ffffff;
+  font-family: 'Inter', sans-serif;
+}
+
+#custom-text:focus {
+  outline: none;
+  border-color: #4285F4;
+  box-shadow: 0 0 0 3px rgba(66, 133, 244, 0.1);
+}
+
+.camera-controls {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+.camera-btn {
+  flex: 1;
+  padding: 10px;
+  border: none;
+  border-radius: 8px;
+  background: #f5f5f5;
+  cursor: pointer;
+  font-size: 12px;
+  transition: all 0.3s ease;
+}
+
+.camera-btn:hover {
+  background: #e0e0e0;
+}
+
+.preview-section {
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 2px solid #f0f0f0;
+}
+
+.download-area {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.loading {
+  display: none;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+}
+
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid #4285F4;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.notification {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  padding: 15px 20px;
+  border-radius: 10px;
+  color: white;
+  font-weight: 500;
+  z-index: 1000;
+  transform: translateX(400px);
+  transition: transform 0.3s ease;
+}
+
+.notification.show {
+  transform: translateX(0);
+}
+
+.notification.success {
+  background: linear-gradient(135deg, #34A853, #2D8A47);
+}
+
+.notification.error {
+  background: linear-gradient(135deg, #EA4335, #D33B2C);
+}
+
+@media (max-width: 768px) {
+  main {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+  
+  .container {
+    padding: 15px;
+  }
+  
+  header {
+    flex-direction: column;
+    gap: 15px;
+    text-align: center;
+  }
+  
+  #camera {
+    width: 100px;
+    height: 100px;
+    top: 44.5%;
+    left: 26%;
+  }
+}

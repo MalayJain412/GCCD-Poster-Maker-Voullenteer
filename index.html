@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>GCCD 2025 Poster Creator</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="logo-section">
+        <div class="logo">GDG</div>
+        <div>
+          <div class="title">GCCD 2025 Poster Creator</div>
+          <div class="subtitle">Create your personalized Cloud Community Day poster</div>
+        </div>
+      </div>
+      <div class="status-indicator">
+        <div class="status-dot"></div>
+        <span id="status-text">Camera Ready</span>
+      </div>
+    </header>
+
+    <main>
+      <div class="poster-workspace">
+        <div class="poster-container">
+          <img src="assets/poster.jpg" alt="Poster Background" id="poster-bg" />
+          <video id="camera" autoplay playsinline muted></video>
+        </div>
+        <div class="loading" id="loading">
+          <div class="spinner"></div>
+        </div>
+      </div>
+
+      <div class="controls-panel">
+        <div class="control-section">
+          <h3>📸 Camera</h3>
+          <div class="camera-controls">
+            <button class="camera-btn" id="switch-camera">🔄 Flip</button>
+            <button class="camera-btn" id="take-photo">📷 Preview</button>
+          </div>
+          <button class="primary-button" id="capture">Capture & Create Poster</button>
+        </div>
+
+        <div class="control-section">
+          <h3>💬 Message Templates</h3>
+          <div class="chips-container">
+            <button class="chip" data-text="I'm attending Cloud Community Day 2025 ☁️">I'm attending CCD 2025 ☁️</button>
+            <button class="chip" data-text="Meet me at CCD Bhopal 2025 🚀">Meet me at CCD Bhopal 🚀</button>
+            <button class="chip" data-text="Let's innovate @ CCD 2025 🧠">Let's innovate @ CCD 2025 🧠</button>
+            <button class="chip" data-text="Cloud Community Day vibes! ✨">CCD vibes! ✨</button>
+          </div>
+        </div>
+
+        <div class="control-section">
+          <h3>✏️ Custom Message</h3>
+          <input type="text" id="custom-text" placeholder="Add your custom caption..." maxlength="50" />
+          <div style="font-size: 12px; color: #666; margin-top: 5px;">
+            <span id="char-count">0</span>/50 characters
+          </div>
+        </div>
+
+        <div class="control-section preview-section">
+          <h3>⬇️ Download</h3>
+          <div class="download-area">
+            <p style="color: #666; font-size: 14px; text-align: center;">Capture your poster to enable download options</p>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <div class="notification" id="notification"></div>
+
+  <script src="script.js"></script>
+</body>
+</html>
