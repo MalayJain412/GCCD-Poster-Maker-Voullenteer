@@ -1,2 +1,0 @@
-# GCCD-Poster-Maker
-
