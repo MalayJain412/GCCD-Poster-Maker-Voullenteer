@@ -229,19 +229,57 @@ class PosterCreator {
 
       this.ctx.restore();
 
-      // Add custom text with better styling (positioned at bottom)
+      // Add custom text with better styling (positioned in the blue arrow area, diagonal, multi-line)
       const text = this.customText.value.trim();
       if (text) {
+        this.ctx.save(); // Save the current context state
+        
+        // Position text in the blue arrow area (upper left portion)
+        const textX = workingWidth * 0.25; // Left side positioning
+        const textY = workingHeight * 0.25; // Upper positioning to match blue arrow area
+        
+        // Rotate the text to be diagonal (matching the blue arrow angle)
+        this.ctx.translate(textX, textY);
+        this.ctx.rotate(-Math.PI / 6); // Rotate -30 degrees (negative for upward diagonal)
+        
         this.ctx.font = `bold ${workingHeight * 0.025}px 'Poppins', 'Inter', sans-serif`;
         this.ctx.fillStyle = '#ffffff';
         this.ctx.strokeStyle = '#000000';
         this.ctx.lineWidth = Math.max(2, workingHeight * 0.003); // Scale line width
         this.ctx.textAlign = 'center';
         
-        // Position text at the bottom of the poster
-        const textY = workingHeight - (workingHeight * 0.06);
-        this.ctx.strokeText(text, workingWidth / 2, textY);
-        this.ctx.fillText(text, workingWidth / 2, textY);
+        // Break text into multiple lines if it's too long
+        const words = text.split(' ');
+        const lines = [];
+        let currentLine = '';
+        const maxWordsPerLine = Math.max(2, Math.floor(words.length / 2)); // Break into 2-3 lines
+        
+        for (let i = 0; i < words.length; i++) {
+          const testLine = currentLine + (currentLine ? ' ' : '') + words[i];
+          const lineWords = testLine.split(' ').length;
+          
+          if (lineWords > maxWordsPerLine && currentLine !== '') {
+            lines.push(currentLine);
+            currentLine = words[i];
+          } else {
+            currentLine = testLine;
+          }
+        }
+        if (currentLine) {
+          lines.push(currentLine);
+        }
+        
+        // Draw each line with proper spacing
+        const lineHeight = workingHeight * 0.03;
+        const startY = -(lines.length - 1) * lineHeight / 2; // Center the multi-line text
+        
+        lines.forEach((line, index) => {
+          const y = startY + index * lineHeight;
+          this.ctx.strokeText(line, 0, y);
+          this.ctx.fillText(line, 0, y);
+        });
+        
+        this.ctx.restore(); // Restore the context state
       }
 
       // Generate and save poster data with compression
