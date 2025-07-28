@@ -3,13 +3,11 @@ class PosterCreator {
     this.video = document.getElementById('camera');
     this.posterImg = document.getElementById('poster-bg');
     this.captureBtn = document.getElementById('capture');
-    this.customText = document.getElementById('custom-text');
+    this.sharePreviewBtn = document.getElementById('share-preview');
     this.chips = document.querySelectorAll('.chip');
     this.switchCameraBtn = document.getElementById('switch-camera');
-    this.takePhotoBtn = document.getElementById('take-photo');
     this.loading = document.getElementById('loading');
     this.statusText = document.getElementById('status-text');
-    this.charCount = document.getElementById('char-count');
     
     this.currentStream = null;
     this.facingMode = 'user';
@@ -53,19 +51,14 @@ class PosterCreator {
   }
 
   bindEvents() {
-    // Chip selection
+    // Chip selection - now sets internal selected text only
     this.chips.forEach(chip => {
       chip.addEventListener('click', () => {
         this.chips.forEach(c => c.classList.remove('selected'));
         chip.classList.add('selected');
-        this.customText.value = chip.dataset.text;
-        this.updateCharCount();
+        // Store selected text internally
+        this.selectedText = chip.dataset.text;
       });
-    });
-
-    // Character counter
-    this.customText.addEventListener('input', () => {
-      this.updateCharCount();
     });
 
     // Camera controls
@@ -73,13 +66,14 @@ class PosterCreator {
       this.switchCamera();
     });
 
-    this.takePhotoBtn.addEventListener('click', () => {
-      this.previewPhoto();
-    });
-
     // Main capture
     this.captureBtn.addEventListener('click', () => {
       this.captureAndCreate();
+    });
+
+    // Share preview button  
+    this.sharePreviewBtn.addEventListener('click', () => {
+      this.shareOnSocialMedia();
     });
 
     // Setup canvas when poster loads
@@ -99,12 +93,6 @@ class PosterCreator {
     }
   }
 
-  updateCharCount() {
-    const count = this.customText.value.length;
-    this.charCount.textContent = count;
-    this.charCount.style.color = count > 45 ? '#EA4335' : '#666';
-  }
-
   setupCanvas() {
     if (this.posterImg.complete && this.posterImg.naturalWidth > 0) {
       this.canvas.width = this.posterImg.naturalWidth;
@@ -121,29 +109,6 @@ class PosterCreator {
     this.facingMode = this.facingMode === 'user' ? 'environment' : 'user';
     await this.startCamera();
     this.showNotification('Camera switched!', 'success');
-  }
-
-  previewPhoto() {
-    // Add a flash effect
-    const flash = document.createElement('div');
-    flash.style.cssText = `
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: white;
-      z-index: 9999;
-      pointer-events: none;
-      opacity: 0.8;
-    `;
-    document.body.appendChild(flash);
-    
-    setTimeout(() => {
-      document.body.removeChild(flash);
-    }, 150);
-    
-    this.showNotification('Photo preview captured!', 'success');
   }
 
   async captureAndCreate() {
@@ -168,8 +133,8 @@ class PosterCreator {
 
     try {
       // Get poster dimensions
-      const posterWidth = this.posterImg.naturalWidth || this.posterImg.width || 600;
-      const posterHeight = this.posterImg.naturalHeight || this.posterImg.height || 800;
+      const posterWidth = this.posterImg.naturalWidth || this.posterImg.width || 1080;
+      const posterHeight = this.posterImg.naturalHeight || this.posterImg.height || 1080;
       
       console.log('Poster dimensions:', posterWidth, 'x', posterHeight);
       console.log('Video dimensions:', this.video.videoWidth, 'x', this.video.videoHeight);
@@ -192,18 +157,29 @@ class PosterCreator {
       // Draw poster background (scaled)
       this.ctx.drawImage(this.posterImg, 0, 0, workingWidth, workingHeight);
 
-      // Calculate selfie position based on working dimensions to match the black circle
-      const x = workingWidth * 0.5; // Center horizontally (black circle is centered)
-      const y = workingHeight * 0.32; // Moved up to 0.32 as requested
-      const radius = Math.min(workingWidth, workingHeight) * 0.11; // Increased size to fill the black circle better
+      // PERFECTLY CENTERED POSITIONING: Photo positioned at exact center of poster
+      const photoX = workingWidth * 0.5;   // 50% from left (perfect center)
+      const photoY = workingHeight * 0.5;  // 50% from top (perfect center)
+      const photoRadius = Math.min(workingWidth, workingHeight) * 0.18; // Increased from 15% to 18% (20% larger)
+      const borderWidth = photoRadius * 0.08; // Blue/green border with padding
 
-      console.log('Selfie position:', x, y, 'radius:', radius);
-      console.log('Position percentages: x=50%, y=32%, radius=11%');
+      console.log('PERFECTLY CENTERED Photo position:', photoX, photoY, 'radius:', photoRadius);
+      console.log('Position percentages: x=50%, y=50%, radius=18% (enlarged from 15%)');
 
-      // Draw circular selfie
+      // Draw blue/green gradient border circle first
+      this.ctx.beginPath();
+      this.ctx.arc(photoX, photoY, photoRadius + borderWidth, 0, Math.PI * 2, true);
+      // Create gradient border (blue to green)
+      const gradient = this.ctx.createRadialGradient(photoX, photoY, photoRadius, photoX, photoY, photoRadius + borderWidth);
+      gradient.addColorStop(0, '#4285F4'); // Google Blue
+      gradient.addColorStop(1, '#34A853'); // Google Green
+      this.ctx.fillStyle = gradient;
+      this.ctx.fill();
+
+      // Draw circular photo with padding
       this.ctx.save();
       this.ctx.beginPath();
-      this.ctx.arc(x, y, radius, 0, Math.PI * 2, true);
+      this.ctx.arc(photoX, photoY, photoRadius, 0, Math.PI * 2, true);
       this.ctx.closePath();
       this.ctx.clip();
 
@@ -223,71 +199,39 @@ class PosterCreator {
       this.ctx.drawImage(
         this.video,
         sx, sy, side, side,
-        x - radius, y - radius,
-        radius * 2, radius * 2
+        photoX - photoRadius, photoY - photoRadius,
+        photoRadius * 2, photoRadius * 2
       );
 
       this.ctx.restore();
 
-      // Add custom text with better styling (positioned in the blue arrow area, diagonal, multi-line)
-      const text = this.customText.value.trim();
+      // Position text in the upper left area (where blue oval is marked)
+      const text = this.selectedText ? this.selectedText.trim() : '';
       if (text) {
-        this.ctx.save(); // Save the current context state
+        // Calculate responsive font size
+        const fontSize = workingHeight * 0.035; // 3.5% of poster height
+        this.ctx.font = `bold ${fontSize}px 'Poppins', 'Inter', sans-serif`;
+        this.ctx.fillStyle = '#2D7D32'; // Green color to match design
+        this.ctx.strokeStyle = '#ffffff';
+        this.ctx.lineWidth = Math.max(3, workingHeight * 0.005); // Thick white stroke
+        this.ctx.textAlign = 'left'; // Left align for upper left positioning
         
-        // Position text in the blue arrow area (upper left portion)
-        const textX = workingWidth * 0.25; // Left side positioning
-        const textY = workingHeight * 0.25; // Upper positioning to match blue arrow area
+        // Position text in upper left area (where blue oval is marked)
+        const textX = workingWidth * 0.1; // 10% from left (upper left area)
+        const textY = workingHeight * 0.25; // 25% from top (upper portion)
         
-        // Rotate the text to be diagonal (matching the blue arrow angle)
-        this.ctx.translate(textX, textY);
-        this.ctx.rotate(-Math.PI / 6); // Rotate -30 degrees (negative for upward diagonal)
+        console.log('Text position (upper left):', textX, textY, 'Font size:', fontSize);
+        console.log('Selected text:', text);
         
-        this.ctx.font = `bold ${workingHeight * 0.025}px 'Poppins', 'Inter', sans-serif`;
-        this.ctx.fillStyle = '#ffffff';
-        this.ctx.strokeStyle = '#000000';
-        this.ctx.lineWidth = Math.max(2, workingHeight * 0.003); // Scale line width
-        this.ctx.textAlign = 'center';
-        
-        // Break text into multiple lines if it's too long
-        const words = text.split(' ');
-        const lines = [];
-        let currentLine = '';
-        const maxWordsPerLine = Math.max(2, Math.floor(words.length / 2)); // Break into 2-3 lines
-        
-        for (let i = 0; i < words.length; i++) {
-          const testLine = currentLine + (currentLine ? ' ' : '') + words[i];
-          const lineWords = testLine.split(' ').length;
-          
-          if (lineWords > maxWordsPerLine && currentLine !== '') {
-            lines.push(currentLine);
-            currentLine = words[i];
-          } else {
-            currentLine = testLine;
-          }
-        }
-        if (currentLine) {
-          lines.push(currentLine);
-        }
-        
-        // Draw each line with proper spacing
-        const lineHeight = workingHeight * 0.03;
-        const startY = -(lines.length - 1) * lineHeight / 2; // Center the multi-line text
-        
-        lines.forEach((line, index) => {
-          const y = startY + index * lineHeight;
-          this.ctx.strokeText(line, 0, y);
-          this.ctx.fillText(line, 0, y);
-        });
-        
-        this.ctx.restore(); // Restore the context state
+        this.ctx.strokeText(text, textX, textY);
+        this.ctx.fillText(text, textX, textY);
       }
 
       // Generate and save poster data with compression
-      // First try with lower quality to reduce size
       let posterDataUrl = this.canvas.toDataURL('image/jpeg', 0.8); // 80% quality JPEG
       
       // Check if the data URL is too large for localStorage
-      const maxSize = 4 * 1024 * 1024; // 4MB limit (localStorage is usually 5-10MB)
+      const maxSize = 4 * 1024 * 1024; // 4MB limit
       
       if (posterDataUrl.length > maxSize) {
         console.log('Image too large, compressing further...');
@@ -301,9 +245,9 @@ class PosterCreator {
           
           // Scale down to max 1200px width while maintaining aspect ratio
           const maxWidth = 1200;
-          const scale = Math.min(1, maxWidth / posterWidth);
-          const scaledWidth = posterWidth * scale;
-          const scaledHeight = posterHeight * scale;
+          const storageScale = Math.min(1, maxWidth / posterWidth);
+          const scaledWidth = posterWidth * storageScale;
+          const scaledHeight = posterHeight * storageScale;
           
           storageCanvas.width = scaledWidth;
           storageCanvas.height = scaledHeight;
@@ -322,6 +266,10 @@ class PosterCreator {
 
       console.log('Final data URL size:', (posterDataUrl.length / 1024 / 1024).toFixed(2), 'MB');
       localStorage.setItem('gccd_poster_data', posterDataUrl);
+      
+      // Enable share button
+      this.sharePreviewBtn.disabled = false;
+      this.sharePreviewBtn.querySelector('span:last-child').textContent = 'Share Created Poster';
       
       this.showNotification('Poster created! Redirecting...', 'success');
       
@@ -348,6 +296,72 @@ class PosterCreator {
       this.captureBtn.textContent = 'Capture & Create Poster';
     } finally {
       this.loading.style.display = 'none';
+    }
+  }
+
+  async shareOnSocialMedia() {
+    const posterData = localStorage.getItem('gccd_poster_data');
+    if (!posterData) {
+      this.showNotification('Please create a poster first!', 'error');
+      return;
+    }
+
+    // Platform-specific share texts with specific hashtags
+    const shareTexts = {
+      general: `🎉 Just created my personalized GCCD 2025 poster! Join me at Cloud Community Day Bhopal 2025 🚀\n\n#CCD2025 #CCDBHOPAL #GoogleDeveloperGroups #CloudCommunityDay #TechEvents #Bhopal #GDGBhopal #GoogleCloud`,
+      
+      twitter: `🎉 Just created my personalized GCCD 2025 poster! Join me at Cloud Community Day Bhopal 2025 🚀\n\n#CCD2025 #CCDBHOPAL #GoogleDeveloperGroups #CloudCommunityDay #TechEvents #Bhopal #GDGBhopal #GoogleCloud #Developer #AI #MachineLearning #CloudComputing`,
+      
+      instagram: `🎉 Just created my personalized GCCD 2025 poster! Join me at Cloud Community Day Bhopal 2025 🚀\n\n#CCD2025 #CCDBHOPAL #GoogleDeveloperGroups #CloudCommunityDay #TechEvents #Bhopal #GDGBhopal #GoogleCloud #Developer #TechCommunity #CloudComputing #Innovation #TechLife #CodeLife #DeveloperLife`,
+      
+      linkedin: `🎉 Excited to share my personalized GCCD 2025 poster! Looking forward to Cloud Community Day Bhopal 2025 🚀\n\nJoin me for an amazing day of learning, networking, and innovation in cloud technologies. Connect with fellow developers and tech enthusiasts!\n\n#CCD2025 #CCDBHOPAL #GoogleDeveloperGroups #CloudCommunityDay #TechEvents #Bhopal #GDGBhopal #GoogleCloud #Developer #TechCommunity #CloudComputing #Networking #Innovation #ProfessionalDevelopment #TechCareer`,
+      
+      facebook: `🎉 Just created my personalized GCCD 2025 poster! Excited for Cloud Community Day Bhopal 2025 🚀\n\nCome join us for an incredible day of tech talks, workshops, and networking with amazing developers and cloud enthusiasts!\n\n#CCD2025 #CCDBHOPAL #GoogleDeveloperGroups #CloudCommunityDay #TechEvents #Bhopal #GDGBhopal #GoogleCloud #TechCommunity #Innovation`
+    };
+    
+    try {
+      // Convert data URL to blob
+      const response = await fetch(posterData);
+      const blob = await response.blob();
+      const file = new File([blob], 'gccd-2025-poster.png', { type: 'image/png' });
+
+      // Priority order: Native share > Copy to clipboard > Manual
+      if (navigator.share && navigator.canShare({ files: [file] })) {
+        // 1. Native sharing with image (highest priority)
+        await navigator.share({
+          title: 'GCCD 2025 Poster',
+          text: shareTexts.general,
+          files: [file]
+        });
+        this.showNotification('Poster shared successfully! 🎉', 'success');
+      } else if (navigator.share) {
+        // 2. Native sharing without image (fallback)
+        await navigator.share({
+          title: 'GCCD 2025 Poster',
+          text: shareTexts.general,
+          url: window.location.href
+        });
+        this.showNotification('Shared successfully!', 'success');
+        // Also copy image to clipboard
+        await navigator.clipboard.write([new ClipboardItem({ 'image/png': blob })]);
+        this.showNotification('Image also copied to clipboard!', 'success');
+      } else {
+        // 3. Copy to clipboard (manual fallback)
+        await navigator.clipboard.write([new ClipboardItem({ 'image/png': blob })]);
+        this.showNotification('Image copied to clipboard! Paste it to share on social media 📋', 'success');
+      }
+    } catch (error) {
+      console.error('Share error:', error);
+      this.showNotification('Sharing not supported. Image copied to clipboard!', 'success');
+      
+      // Fallback: copy to clipboard
+      try {
+        const response = await fetch(posterData);
+        const blob = await response.blob();
+        await navigator.clipboard.write([new ClipboardItem({ 'image/png': blob })]);
+      } catch (clipError) {
+        console.error('Clipboard error:', clipError);
+      }
     }
   }
 

@@ -1,3 +1,4 @@
+/* Mobile-first design */
 * {
   margin: 0;
   padding: 0;
@@ -11,22 +12,19 @@ body {
   color: #333;
 }
 
-.container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 20px;
-}
-
 header {
   display: flex;
   align-items: center;
   justify-content: space-between;
   background: #f8f9fa;
   border: 1px solid #e9ecef;
-  border-radius: 20px;
-  padding: 15px 25px;
-  margin-bottom: 30px;
+  border-radius: 15px;
+  padding: 10px 15px;
+  margin-bottom: 15px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  flex-direction: column;
+  gap: 10px;
+  text-align: center;
 }
 
 .logo-section {
@@ -36,28 +34,28 @@ header {
 }
 
 .logo {
-  width: 50px;
-  height: 50px;
-  background: linear-gradient(45deg, #4285F4, #34A853, #FBBC05, #EA4335);
-  border-radius: 12px;
+  width: 40px;
+  height: 40px;
+  /* background: linear-gradient(45deg, #4285F4, #34A853, #FBBC05, #EA4335); */
+  border-radius: 10px;
   display: flex;
   align-items: center;
   justify-content: center;
   font-weight: bold;
   color: white;
-  font-size: 18px;
+  font-size: 16px;
 }
 
 .title {
   color: #333;
-  font-size: 24px;
+  font-size: 20px;
   font-weight: 700;
   font-family: 'Poppins', sans-serif;
 }
 
 .subtitle {
   color: #666;
-  font-size: 14px;
+  font-size: 12px;
   font-family: 'Inter', sans-serif;
 }
 
@@ -66,17 +64,17 @@ header {
   align-items: center;
   gap: 8px;
   background: rgba(52, 168, 83, 0.1);
-  padding: 8px 15px;
-  border-radius: 20px;
+  padding: 6px 12px;
+  border-radius: 15px;
   color: #34A853;
-  font-size: 14px;
+  font-size: 12px;
   font-weight: 500;
   border: 1px solid rgba(52, 168, 83, 0.2);
 }
 
 .status-dot {
-  width: 8px;
-  height: 8px;
+  width: 6px;
+  height: 6px;
   background: #34A853;
   border-radius: 50%;
   animation: pulse 2s infinite;
@@ -87,85 +85,174 @@ header {
   50% { opacity: 0.5; }
 }
 
-main {
-  display: grid;
-  grid-template-columns: 1fr 400px;
-  gap: 30px;
-  align-items: start;
-}
-
-.poster-workspace {
-  background: #ffffff;
-  border: 1px solid #e9ecef;
-  border-radius: 20px;
-  padding: 30px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-}
-
 .poster-container {
   position: relative;
   display: inline-block;
   border-radius: 15px;
   overflow: hidden;
-  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
-}
-
-#poster-bg {
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
   width: 100%;
-  max-width: 600px;
-  height: auto;
-  display: block;
-}
-
-#camera {
-  position: absolute;
-  top: 23%;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 170px;
-  height: 170px;
-  border-radius: 50%;
-  object-fit: cover;
-  border: 4px solid rgba(255, 255, 255, 0.9);
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
-  z-index: 5;
-  transition: all 0.3s ease;
-}
-
-#camera:hover {
-  transform: scale(1.05);
-  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
-}
-
-#camera.hidden {
-  display: none;
-}
-
-.controls-panel {
-  background: #ffffff;
-  border: 1px solid #e9ecef;
-  border-radius: 20px;
-  padding: 30px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-  height: fit-content;
-}
-
-.control-section {
-  margin-bottom: 25px;
 }
 
 .control-section h3 {
-  margin-bottom: 15px;
+  margin-bottom: 12px;
   color: #333;
-  font-size: 18px;
+  font-size: 16px;
   font-weight: 600;
   font-family: 'Poppins', sans-serif;
 }
 
-.primary-button {
+#custom-text {
   width: 100%;
+  padding: 12px;
+  border-radius: 10px;
+  border: 2px solid #e0e0e0;
+  font-size: 14px;
+  transition: all 0.3s ease;
+  background: #ffffff;
+  font-family: 'Inter', sans-serif;
+}
+
+#custom-text:focus {
+  outline: none;
+  border-color: #4285F4;
+  box-shadow: 0 0 0 3px rgba(66, 133, 244, 0.1);
+}
+
+.camera-controls {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.camera-btn {
+  flex: 0.8; /* Reduced from 1 to 0.8 to decrease width */
+  padding: 8px;
+  border: none;
+  border-radius: 8px;
+  background: #f5f5f5;
+  cursor: pointer;
+  font-size: 11px;
+  transition: all 0.3s ease;
+  max-width: 120px; /* Added max-width for better control */
+  margin: 0 auto; /* Center the button */
+}
+
+.camera-btn:hover {
+  background: #e0e0e0;
+}
+
+.chip:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(251, 188, 5, 0.3);
+}
+
+.chip.selected {
+  background: linear-gradient(135deg, #34A853, #2D8A47);
+  color: white;
+}
+
+.loading {
+  display: none;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+}
+
+.spinner {
+  width: 30px;
+  height: 30px;
+  border: 3px solid #f3f3f3;
+  border-top: 3px solid #4285F4;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.notification {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  padding: 12px 16px;
+  border-radius: 10px;
+  color: white;
+  font-weight: 500;
+  z-index: 1000;
+  transform: translateX(400px);
+  transition: transform 0.3s ease;
+  font-size: 14px;
+}
+
+.notification.show {
+  transform: translateX(0);
+}
+
+.notification.success {
+  background: linear-gradient(135deg, #34A853, #2D8A47);
+}
+
+.notification.error {
+  background: linear-gradient(135deg, #EA4335, #D33B2C);
+}
+
+.container {
+  max-width: 100%;
+  margin: 0 auto;
+  padding: 10px;
+}
+
+main {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.poster-workspace {
+  background: #ffffff;
+  border: 1px solid #e9ecef;
+  border-radius: 15px;
   padding: 15px;
-  font-size: 16px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+#poster-bg {
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* PERFECTLY CENTERED CAMERA POSITIONING - Reduced by 3% */
+#camera {
+  position: absolute;
+  /* Perfect center positioning */
+  top: 50%;              /* 50% from top (perfect center) */
+  left: 50%;             /* 50% from left (perfect center) */
+  transform: translate(-50%, -50%);
+  width: 175px;          /* Reduced by 3% (180px * 0.97 = 174.6px ≈ 175px) */
+  height: 175px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 6px solid #4285F4;
+  box-shadow: 0 12px 30px rgba(66, 133, 244, 0.4);
+  z-index: 5;
+  transition: all 0.3s ease;
+  background: linear-gradient(45deg, #4285F4, #34A853); /* Blue to green gradient */
+}
+
+.control-section {
+  margin-bottom: 15px;
+}
+
+.primary-button {
+  flex: 0.8;
+  width: 60%;  /* Reduced from 80% */
+  padding: 12px;  /* Reduced from 15px */
+  font-size: 14px;  /* Reduced from 16px */
   font-weight: 600;
   border: none;
   border-radius: 12px;
@@ -173,24 +260,14 @@ main {
   color: white;
   background: linear-gradient(135deg, #4285F4, #3367D6);
   transition: all 0.3s ease;
-  position: relative;
-  overflow: hidden;
-  margin-bottom: 10px;
-}
-
-.primary-button:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 10px 25px rgba(66, 133, 244, 0.3);
-}
-
-.primary-button:active {
-  transform: translateY(0);
+  margin: 0 auto 10px auto;  /* Added auto margin for horizontal centering */
+  display: block;  /* Changed to block for better centering */
 }
 
 .secondary-button {
-  width: 100%;
-  padding: 12px;
-  font-size: 14px;
+  width: 60%;  /* Reduced from 100% */
+  padding: 10px;  /* Reduced from 12px */
+  font-size: 13px;  /* Reduced from 14px */
   font-weight: 500;
   border: 2px solid #4285F4;
   border-radius: 10px;
@@ -198,32 +275,24 @@ main {
   color: #4285F4;
   background: transparent;
   transition: all 0.3s ease;
-  margin-bottom: 8px;
+  margin: 0 auto 8px auto;  /* Added auto margin for horizontal centering */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
 }
 
-.secondary-button:hover {
-  background: #4285F4;
-  color: white;
-  transform: translateY(-1px);
-}
-
-.secondary-button.disabled {
+.secondary-button:disabled {
   border-color: #ccc;
   color: #999;
   cursor: not-allowed;
   background: #f5f5f5;
 }
 
-.secondary-button.disabled:hover {
-  transform: none;
-  background: #f5f5f5;
-  color: #999;
-}
-
 .chips-container {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 8px;
 }
 
 .chip {
@@ -249,122 +318,138 @@ main {
   color: white;
 }
 
-#custom-text {
-  width: 100%;
-  padding: 15px;
-  border-radius: 10px;
-  border: 2px solid #e0e0e0;
-  font-size: 14px;
-  transition: all 0.3s ease;
-  background: #ffffff;
-  font-family: 'Inter', sans-serif;
-}
-
-#custom-text:focus {
-  outline: none;
-  border-color: #4285F4;
-  box-shadow: 0 0 0 3px rgba(66, 133, 244, 0.1);
-}
-
-.camera-controls {
-  display: flex;
-  gap: 10px;
-  margin-bottom: 15px;
-}
-
-.camera-btn {
-  flex: 1;
-  padding: 10px;
-  border: none;
-  border-radius: 8px;
-  background: #f5f5f5;
-  cursor: pointer;
-  font-size: 12px;
-  transition: all 0.3s ease;
-}
-
-.camera-btn:hover {
-  background: #e0e0e0;
-}
-
-.preview-section {
-  margin-top: 20px;
-  padding-top: 20px;
-  border-top: 2px solid #f0f0f0;
-}
-
-.download-area {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.loading {
-  display: none;
-  justify-content: center;
-  align-items: center;
-  padding: 20px;
-}
-
-.spinner {
-  width: 40px;
-  height: 40px;
-  border: 4px solid #f3f3f3;
-  border-top: 4px solid #4285F4;
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-}
-
-.notification {
-  position: fixed;
-  top: 20px;
-  right: 20px;
-  padding: 15px 20px;
-  border-radius: 10px;
-  color: white;
-  font-weight: 500;
-  z-index: 1000;
-  transform: translateX(400px);
-  transition: transform 0.3s ease;
-}
-
-.notification.show {
-  transform: translateX(0);
-}
-
-.notification.success {
-  background: linear-gradient(135deg, #34A853, #2D8A47);
-}
-
-.notification.error {
-  background: linear-gradient(135deg, #EA4335, #D33B2C);
-}
-
-@media (max-width: 768px) {
-  main {
-    grid-template-columns: 1fr;
-    gap: 20px;
-  }
-  
+/* Desktop Responsive Design */
+@media (min-width: 768px) {
   .container {
+    max-width: 1200px;
+    padding: 20px;
+  }
+
+  header {
+    flex-direction: row;
+    text-align: left;
+    padding: 15px 25px;
+  }
+
+  .logo {
+    width: 50px;
+    height: 50px;
+    font-size: 18px;
+  }
+
+  .title {
+    font-size: 24px;
+  }
+
+  .subtitle {
+    font-size: 14px;
+  }
+
+  .status-indicator {
+    padding: 8px 15px;
+    font-size: 14px;
+  }
+
+  .status-dot {
+    width: 8px;
+    height: 8px;
+  }
+
+  main {
+    display: grid;
+    grid-template-columns: 1fr 400px;
+    grid-template-rows: auto auto;
+    gap: 30px;
+    align-items: start;
+  }
+
+  /* Desktop Layout: 
+     Left Column: Poster (spans both rows)
+     Right Column: Top Controls, Bottom Controls (stacked)
+  */
+  .top-controls {
+    grid-column: 2;
+    grid-row: 1;
+    padding: 30px;
+  }
+
+  .poster-workspace {
+    grid-column: 1;
+    grid-row: 1 / span 2; /* Span both rows */
+    padding: 30px;
+  }
+
+  .bottom-controls {
+    grid-column: 2;
+    grid-row: 2;
+    padding: 30px;
+  }
+
+  #poster-bg {
+    max-width: 600px;
+  }
+
+  /* PERFECTLY CENTERED DESKTOP CAMERA POSITIONING - Reduced by 3% */
+  #camera {
+    width: 271px;         /* Reduced by 3% (280px * 0.97 = 271.6px ≈ 271px) */
+    height: 271px;
+    border: 8px solid #4285F4;  /* Thicker border */
+    box-shadow: 0 20px 50px rgba(66, 133, 244, 0.5);
+    /* Keep perfect center positioning */
+    top: 50%;             /* Perfect center vertically */
+    left: 50%;            /* Perfect center horizontally */
+  }
+
+  #camera:hover {
+    transform: translate(-50%, -50%) scale(1.05);
+    box-shadow: 0 15px 35px rgba(66, 133, 244, 0.4);
+  }
+
+  .control-section h3 {
+    font-size: 18px;
+    margin-bottom: 15px;
+  }
+
+  .chips-container {
+    gap: 10px;
+  }
+
+  .primary-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px rgba(66, 133, 244, 0.3);
+  }
+
+  .primary-button:active {
+    transform: translateY(0);
+  }
+
+  .secondary-button:hover {
+    background: #4285F4;
+    color: white;
+    transform: translateY(-1px);
+  }
+
+  .secondary-button:disabled:hover {
+    transform: none;
+    background: #f5f5f5;
+    color: #999;
+  }
+
+  #custom-text {
     padding: 15px;
   }
-  
-  header {
-    flex-direction: column;
-    gap: 15px;
-    text-align: center;
+
+  .camera-controls {
+    gap: 10px;
+    margin-bottom: 15px;
   }
-  
-  #camera {
-    width: 100px;
-    height: 100px;
-    top: 44.5%;
-    left: 26%;
+
+  .camera-btn {
+    padding: 10px;
+    font-size: 12px;
+  }
+
+  .control-section {
+    margin-bottom: 25px;
   }
 }

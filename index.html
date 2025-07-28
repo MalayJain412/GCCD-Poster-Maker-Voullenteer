@@ -4,16 +4,290 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>GCCD 2025 Poster Creator</title>
+  <link rel="icon" href="https://ccd.bhopal.dev/favicon.ico" type="image/x-icon" />
+  <link rel="shortcut icon" href="https://ccd.bhopal.dev/favicon.ico" type="image/x-icon" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css" />
+  <style>
+    /* Inline critical CSS for faster loading */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', 'Poppins', 'Segoe UI', sans-serif;
+      background: #ffffff;
+      min-height: 100vh;
+      color: #333;
+    }
+
+    .container {
+      max-width: 100%;
+      margin: 0 auto;
+      padding: 10px;
+      background: #ffffff;  /* Plain white background */
+    }
+
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: #ffffff;  /* Plain white background */
+      border: 1px solid #e9ecef;
+      border-radius: 15px;
+      padding: 10px 15px;
+      margin-bottom: 15px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);  /* Lighter shadow */
+      flex-direction: column;
+      gap: 10px;
+      text-align: center;
+    }
+
+    .logo-section {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .logo {
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      /* Remove background and shadow */
+    }
+
+    .logo-img {
+      width: 100%;  /* Use full container width */
+      height: 100%; /* Use full container height */
+      object-fit: contain;
+    }
+
+    .title {
+      color: #333;
+      font-size: 20px;
+      font-weight: 700;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    .subtitle {
+      color: #666;
+      font-size: 12px;
+      font-family: 'Inter', sans-serif;
+    }
+
+    .status-indicator {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(52, 168, 83, 0.1);
+      padding: 6px 12px;
+      border-radius: 15px;
+      color: #34A853;
+      font-size: 12px;
+      font-weight: 500;
+      border: 1px solid rgba(52, 168, 83, 0.2);
+    }
+
+    .status-dot {
+      width: 6px;
+      height: 6px;
+      background: #34A853;
+      border-radius: 50%;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+
+    main {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    /* TOP CONTROLS: Camera & Message Templates ONLY */
+    .top-controls {
+      background: #ffffff;
+      border: 1px solid #e9ecef;
+      border-radius: 15px;
+      padding: 15px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);  /* Lighter shadow */
+    }
+
+    /* POSTER WORKSPACE: Center section */
+    .poster-workspace {
+      background: #ffffff;
+      border: 1px solid #e9ecef;
+      border-radius: 15px;
+      padding: 15px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);  /* Lighter shadow */
+    }
+
+    /* BOTTOM CONTROLS: Custom Message & Share ONLY */
+    .bottom-controls {
+      background: #ffffff;
+      border: 1px solid #e9ecef;
+      border-radius: 15px;
+      padding: 15px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);  /* Lighter shadow */
+    }
+
+    .control-section {
+      margin-bottom: 15px;
+    }
+
+    .control-section:last-child {
+      margin-bottom: 0;
+    }
+
+    .poster-container {
+      position: relative;
+      display: inline-block;
+      border-radius: 15px;
+      overflow: hidden;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+      width: 100%;
+    }
+
+    #poster-bg {
+      width: 100%;
+      max-width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    /* PERFECTLY CENTERED CAMERA POSITIONING */
+    #camera {
+      position: absolute;
+      top: 50%;              /* Perfect center vertically */
+      left: 50%;             /* Perfect center horizontally */
+      transform: translate(-50%, -50%);
+      width: 180px;          /* Much larger for better visibility */
+      height: 180px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 6px solid #4285F4;
+      box-shadow: 0 12px 30px rgba(66, 133, 244, 0.4);
+      z-index: 5;
+      transition: all 0.3s ease;
+      background: linear-gradient(45deg, #4285F4, #34A853);
+    }
+
+    .loading {
+      display: none;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+
+    .spinner {
+      width: 30px;
+      height: 30px;
+      border: 3px solid #f3f3f3;
+      border-top: 3px solid #4285F4;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    /* Desktop responsive */
+    @media (min-width: 768px) {
+      .container {
+        max-width: 1200px;
+        padding: 20px;
+        background: #ffffff;  /* Maintain white background on desktop */
+      }
+
+      header {
+        flex-direction: row;
+        text-align: left;
+        padding: 15px 25px;
+      }
+
+      .logo {
+        width: 50px;
+        height: 50px;
+      }
+      
+      /* .logo-img {
+        width: 40px;
+        height: 40px;
+      } */
+
+      .title {
+        font-size: 24px;
+      }
+
+      .subtitle {
+        font-size: 14px;
+      }
+
+      main {
+        display: grid;
+        grid-template-columns: 1fr 400px;
+        grid-template-rows: auto auto;
+        gap: 30px;
+        align-items: start;
+      }
+
+      /* Desktop Layout: 
+         Left Column: Poster (spans both rows)
+         Right Column: Top Controls, Bottom Controls (stacked)
+      */
+      .top-controls {
+        grid-column: 2;
+        grid-row: 1;
+        padding: 30px;
+      }
+
+      .poster-workspace {
+        grid-column: 1;
+        grid-row: 1 / span 2; /* Span both rows */
+        padding: 30px;
+      }
+
+      .bottom-controls {
+        grid-column: 2;
+        grid-row: 2;
+        padding: 30px;
+      }
+
+      #poster-bg {
+        max-width: 600px;
+      }
+
+      #camera {
+        width: 280px;         /* Much larger for desktop */
+        height: 280px;
+        border: 8px solid #4285F4;
+        box-shadow: 0 20px 50px rgba(66, 133, 244, 0.5);
+      }
+
+      #camera:hover {
+        transform: translate(-50%, -50%) scale(1.05);
+        box-shadow: 0 15px 35px rgba(66, 133, 244, 0.4);
+      }
+    }
+  </style>
 </head>
 <body>
   <div class="container">
     <header>
       <div class="logo-section">
-        <div class="logo">GDG</div>
+        <div class="logo">
+          <img src="https://ccd.bhopal.dev/favicon.ico" alt="GCCD Logo" class="logo-img">
+        </div>
         <div>
           <div class="title">GCCD 2025 Poster Creator</div>
           <div class="subtitle">Create your personalized Cloud Community Day poster</div>
@@ -28,7 +302,9 @@
     <main>
       <div class="poster-workspace">
         <div class="poster-container">
-          <img src="assets/poster.jpg" alt="Poster Background" id="poster-bg" />
+          <!-- CORRECTED: Using a data URL for the poster background -->
+          <!-- This should be replaced with your actual poster image -->
+          <img src="assets/poster.jpg" alt="GCCD Poster Background" id="poster-bg" />
           <video id="camera" autoplay playsinline muted></video>
         </div>
         <div class="loading" id="loading">
@@ -40,42 +316,50 @@
         <div class="control-section">
           <h3>📸 Camera</h3>
           <div class="camera-controls">
-            <button class="camera-btn" id="switch-camera">🔄 Flip</button>
-            <button class="camera-btn" id="take-photo">📷 Preview</button>
+            <button class="camera-btn" id="switch-camera">🔄 Flip Camera</button>
           </div>
-          <button class="primary-button" id="capture">Capture & Create Poster</button>
-        </div>
-
-        <div class="control-section">
-          <h3>💬 Message Templates</h3>
-          <div class="chips-container">
-            <button class="chip" data-text="I'm attending Cloud Community Day 2025 ☁️">I'm attending CCD 2025 ☁️</button>
-            <button class="chip" data-text="Meet me at CCD Bhopal 2025 🚀">Meet me at CCD Bhopal 🚀</button>
-            <button class="chip" data-text="Let's innovate @ CCD 2025 🧠">Let's innovate @ CCD 2025 🧠</button>
-            <button class="chip" data-text="Cloud Community Day vibes! ✨">CCD vibes! ✨</button>
-          </div>
-        </div>
-
-        <div class="control-section">
-          <h3>✏️ Custom Message</h3>
-          <input type="text" id="custom-text" placeholder="Add your custom caption..." maxlength="50" />
-          <div style="font-size: 12px; color: #666; margin-top: 5px;">
-            <span id="char-count">0</span>/50 characters
-          </div>
-        </div>
-
-        <div class="control-section preview-section">
-          <h3>⬇️ Download</h3>
-          <div class="download-area">
-            <p style="color: #666; font-size: 14px; text-align: center;">Capture your poster to enable download options</p>
-          </div>
+          <button class="primary-button" id="capture">📸 Capture & Create Poster</button>
         </div>
       </div>
+
+      <div class="control-section">
+        <h3>✏️ Custom Message</h3>
+        <input type="text" id="custom-text" placeholder="Add your custom caption..." maxlength="30" />
+        <div style="font-size: 12px; color: #666; margin-top: 5px;">
+           <span id="char-count">0</span>/30 characters
+        </div>
+      </div>
+
+      <div class="control-section">
+        <h3>💬 Message Templates</h3>
+        <div class="chips-container">
+          <button class="chip" data-text="I'm attending Cloud Community Day 2025 ☁️">I'm attending CCD 2025 ☁️</button>
+          <button class="chip" data-text="Meet me at CCD Bhopal 2025 🚀">Meet me at CCD Bhopal 🚀</button>
+          <button class="chip" data-text="Let's innovate @ CCD 2025 🧠">Let's innovate @ CCD 2025 🧠</button>
+          <button class="chip" data-text="Cloud Community Day vibes! ✨">CCD vibes! ✨</button>
+        </div>
+      </div>
+        
+      <div class="control-section">
+        <h3>📱 Share Options</h3>
+        <div class="share-preview">
+          <button class="secondary-button" id="share-preview" disabled>
+            <span>📤</span>
+            <span>Share on Social Media</span>
+          </button>
+          <p style="color: #666; font-size: 12px; text-align: center; margin-top: 5px;">
+            Available after capturing poster
+          </p>
+        </div>
+      </div>
+
     </main>
   </div>
 
   <div class="notification" id="notification"></div>
 
+  <!-- Load external CSS for non-critical styles -->
+  <link rel="stylesheet" href="style.css" />
   <script src="script.js"></script>
 </body>
 </html>

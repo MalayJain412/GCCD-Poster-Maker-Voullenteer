@@ -4,6 +4,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Your GCCD 2025 Poster</title>
+  <link rel="icon" href="https://ccd.bhopal.dev/favicon.ico" type="image/x-icon" />
+  <link rel="shortcut icon" href="https://ccd.bhopal.dev/favicon.ico" type="image/x-icon" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -13,7 +15,9 @@
   <div class="container">
     <header>
       <div class="logo-section">
-        <div class="logo">GDG</div>
+        <div class="logo">
+          <img src="https://ccd.bhopal.dev/favicon.ico" alt="GCCD Logo" class="logo-img">
+        </div>
         <div>
           <div class="title">Your GCCD 2025 Poster</div>
           <div class="subtitle">Ready to download and share!</div>
@@ -37,6 +41,50 @@
             <div class="success-icon">🎉</div>
             <h2>Poster Created Successfully!</h2>
             <p>Your personalized GCCD 2025 poster is ready. Download it or share it with your friends!</p>
+            
+            <!-- Add the sharing text section -->
+            <div class="share-text-section">
+              <h3>Share with these captions:</h3>
+              
+              <div class="platform-text">
+                <div class="platform-header">
+                  <h4>General/Instagram</h4>
+                  <button class="copy-btn" data-platform="instagram">
+                    <span class="copy-icon">📋</span>
+                    <span class="copy-text">Copy</span>
+                  </button>
+                </div>
+                <p>🎉 Just created my personalized GCCD 2025 poster! Join me at Cloud Community Day Bhopal 2025 🚀
+
+#CCD2025 #CCDBHOPAL #GoogleDeveloperGroups #CloudCommunityDay #TechEvents #Bhopal #GDGBhopal #GoogleCloud</p>
+              </div>
+              
+              <div class="platform-text">
+                <div class="platform-header">
+                  <h4>Twitter</h4>
+                  <button class="copy-btn" data-platform="twitter">
+                    <span class="copy-icon">📋</span>
+                    <span class="copy-text">Copy</span>
+                  </button>
+                </div>
+                <p>🎉 Just created my personalized GCCD 2025 poster! Join me at Cloud Community Day Bhopal 2025 🚀
+
+#CCD2025 #CCDBHOPAL #GDG #CloudCommunityDay #TechEvents #Bhopal</p>
+              </div>
+              
+              <div class="platform-text">
+                <div class="platform-header">
+                  <h4>LinkedIn</h4>
+                  <button class="copy-btn" data-platform="linkedin">
+                    <span class="copy-icon">📋</span>
+                    <span class="copy-text">Copy</span>
+                  </button>
+                </div>
+                <p>🎉 Excited to share my personalized GCCD 2025 poster! Looking forward to Cloud Community Day Bhopal 2025 🚀
+
+Join me for an amazing day of learning, networking, and innovation in cloud technologies!</p>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -68,10 +116,6 @@
             <button class="share-button" id="share-native">
               <span class="share-icon">📤</span>
               <span>Share</span>
-            </button>
-            <button class="share-button" id="copy-link">
-              <span class="share-icon">🔗</span>
-              <span>Copy Link</span>
             </button>
             <button class="share-button" id="copy-image">
               <span class="share-icon">📋</span>
